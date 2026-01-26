@@ -321,14 +321,12 @@ CREATE TABLE IF NOT EXISTS user_menu_preferences (
 CREATE INDEX IF NOT EXISTS idx_user_menu_preferences_user ON user_menu_preferences(user_id);
 
 -- Seed default menu items
--- User Admin Menu
--- Hierarchical Menu Structure
+-- Hierarchical Menu Structure with proper UUIDs
 -- Parent items (group headers with no href, collapsible sections)
 INSERT INTO menu_items (id, parent_id, module_key, label_key, label_default, href, icon, sort_order, is_active) VALUES
-  ('user-parent', NULL, 'user', 'menu.user.title', 'User Admin', NULL, 'users', 10, true),
-  ('permissions-parent', NULL, 'permissions', 'menu.permissions.title', 'Permissions Admin', NULL, 'shield', 20, true),
-  ('apikeys-parent', NULL, 'apikeys', 'menu.apikeys.title', 'API Keys', NULL, 'key', 30, true),
-  ('activities-parent', NULL, 'activities', 'menu.activities.title', 'Activities', NULL, 'activity', 40, true)
+  ('10000000-0000-0000-0000-000000000001', NULL, 'user', 'menu.user.title', 'User Admin', NULL, 'users', 10, true),
+  ('20000000-0000-0000-0000-000000000001', NULL, 'permissions', 'menu.permissions.title', 'Permissions', NULL, 'shield', 20, true),
+  ('30000000-0000-0000-0000-000000000001', NULL, 'apikeys', 'menu.apikeys.title', 'API Keys', NULL, 'key', 30, true)
 ON CONFLICT (id) DO UPDATE SET
     label_default = EXCLUDED.label_default,
     href = EXCLUDED.href,
@@ -338,8 +336,8 @@ ON CONFLICT (id) DO UPDATE SET
 
 -- User Admin children
 INSERT INTO menu_items (id, parent_id, module_key, label_key, label_default, href, icon, sort_order, is_active) VALUES
-  ('user-dashboard', 'user-parent', 'user', 'menu.user.dashboard', 'Dashboard', '/admin/user/dashboard', 'layout-dashboard', 10, true),
-  ('user-users', 'user-parent', 'user', 'menu.user.users', 'Benutzer', '/admin/user/users', 'users', 20, true)
+  ('10000000-0000-0000-0000-000000000010', '10000000-0000-0000-0000-000000000001', 'user', 'menu.user.dashboard', 'Dashboard', '/admin/user/dashboard', 'layout-dashboard', 10, true),
+  ('10000000-0000-0000-0000-000000000011', '10000000-0000-0000-0000-000000000001', 'user', 'menu.user.users', 'Benutzer', '/admin/user/users', 'users', 20, true)
 ON CONFLICT (id) DO UPDATE SET
     label_default = EXCLUDED.label_default,
     href = EXCLUDED.href,
@@ -347,14 +345,19 @@ ON CONFLICT (id) DO UPDATE SET
     sort_order = EXCLUDED.sort_order,
     parent_id = EXCLUDED.parent_id;
 
--- Permissions Admin children
+-- Permissions Admin children (RBAC)
 INSERT INTO menu_items (id, parent_id, module_key, label_key, label_default, href, icon, sort_order, is_active) VALUES
-  ('permissions-dashboard', 'permissions-parent', 'permissions', 'menu.permissions.dashboard', 'Dashboard', '/admin/permissions/dashboard', 'layout-dashboard', 10, true),
-  ('permissions-permissions', 'permissions-parent', 'permissions', 'menu.permissions.permissions', 'Berechtigungen', '/admin/permissions/permissions', 'shield-check', 20, true),
-  ('permissions-modules', 'permissions-parent', 'permissions', 'menu.permissions.modules', 'Module', '/admin/permissions/modules', 'package', 30, true),
-  ('permissions-variants', 'permissions-parent', 'permissions', 'menu.permissions.variants', 'Varianten', '/admin/permissions/variants', 'layers', 40, true),
-  ('permissions-groups', 'permissions-parent', 'permissions', 'menu.permissions.groups', 'Gruppen', '/admin/permissions/groups', 'users-round', 50, true),
-  ('permissions-matrix', 'permissions-parent', 'permissions', 'menu.permissions.matrix', 'Matrix', '/admin/permissions/matrix', 'grid-2x2', 60, true)
+  ('20000000-0000-0000-0000-000000000010', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.dashboard', 'Dashboard', '/admin/permissions/dashboard', 'layout-dashboard', 10, true),
+  ('20000000-0000-0000-0000-000000000011', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.roles', 'Rollen', '/admin/permissions/roles', 'user-cog', 15, true),
+  ('20000000-0000-0000-0000-000000000012', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.permissions', 'Berechtigungen', '/admin/permissions/permissions', 'shield-check', 20, true),
+  ('20000000-0000-0000-0000-000000000013', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.modules', 'Module', '/admin/permissions/modules', 'package', 30, true),
+  ('20000000-0000-0000-0000-000000000014', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.resources', 'Ressourcen', '/admin/permissions/resources', 'database', 35, true),
+  ('20000000-0000-0000-0000-000000000015', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.variants', 'Varianten', '/admin/permissions/variants', 'layers', 40, true),
+  ('20000000-0000-0000-0000-000000000016', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.groups', 'Gruppen', '/admin/permissions/groups', 'users-round', 50, true),
+  ('20000000-0000-0000-0000-000000000017', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.orgunits', 'Org. Einheiten', '/admin/permissions/org-units', 'building', 55, true),
+  ('20000000-0000-0000-0000-000000000018', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.matrix', 'Matrix', '/admin/permissions/matrix', 'grid-2x2', 60, true),
+  ('20000000-0000-0000-0000-000000000019', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.effective', 'Effektive Rechte', '/admin/permissions/effective-permissions', 'check-circle', 65, true),
+  ('20000000-0000-0000-0000-00000000001a', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.rbacguide', 'RBAC Guide', '/admin/permissions/rbac-guide', 'book-open', 70, true)
 ON CONFLICT (id) DO UPDATE SET
     label_default = EXCLUDED.label_default,
     href = EXCLUDED.href,
@@ -364,20 +367,8 @@ ON CONFLICT (id) DO UPDATE SET
 
 -- API Keys children
 INSERT INTO menu_items (id, parent_id, module_key, label_key, label_default, href, icon, sort_order, is_active) VALUES
-  ('apikeys-dashboard', 'apikeys-parent', 'apikeys', 'menu.apikeys.dashboard', 'Dashboard', '/admin/api-keys/dashboard', 'layout-dashboard', 10, true),
-  ('apikeys-keys', 'apikeys-parent', 'apikeys', 'menu.apikeys.keys', 'API-Schlüssel', '/admin/api-keys/api-keys', 'key', 20, true)
-ON CONFLICT (id) DO UPDATE SET
-    label_default = EXCLUDED.label_default,
-    href = EXCLUDED.href,
-    icon = EXCLUDED.icon,
-    sort_order = EXCLUDED.sort_order,
-    parent_id = EXCLUDED.parent_id;
-
--- Activities children (requires lg-activities-admin module to be deployed)
-INSERT INTO menu_items (id, parent_id, module_key, label_key, label_default, href, icon, sort_order, is_active) VALUES
-  ('activities-dashboard', 'activities-parent', 'activities', 'menu.activities.dashboard', 'Dashboard', '/admin/activities/dashboard', 'layout-dashboard', 10, true),
-  ('activities-user', 'activities-parent', 'activities', 'menu.activities.user', 'Benutzer-Aktivitäten', '/admin/activities/user', 'user-check', 20, true),
-  ('activities-apikeys', 'activities-parent', 'activities', 'menu.activities.apikeys', 'API-Schlüssel-Aktivitäten', '/admin/activities/api-keys', 'key-round', 30, true)
+  ('30000000-0000-0000-0000-000000000010', '30000000-0000-0000-0000-000000000001', 'apikeys', 'menu.apikeys.dashboard', 'Dashboard', '/admin/api-keys/dashboard', 'layout-dashboard', 10, true),
+  ('30000000-0000-0000-0000-000000000011', '30000000-0000-0000-0000-000000000001', 'apikeys', 'menu.apikeys.keys', 'API-Schlüssel', '/admin/api-keys/api-keys', 'key', 20, true)
 ON CONFLICT (id) DO UPDATE SET
     label_default = EXCLUDED.label_default,
     href = EXCLUDED.href,
