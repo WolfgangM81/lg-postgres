@@ -326,6 +326,7 @@ CREATE INDEX IF NOT EXISTS idx_user_menu_preferences_user ON user_menu_preferenc
 INSERT INTO menu_items (id, parent_id, module_key, label_key, label_default, href, icon, sort_order, is_active) VALUES
   ('10000000-0000-0000-0000-000000000001', NULL, 'user', 'menu.user.title', 'User Admin', NULL, 'users', 10, true),
   ('20000000-0000-0000-0000-000000000001', NULL, 'permissions', 'menu.permissions.title', 'Permissions', NULL, 'shield', 20, true),
+  ('40000000-0000-0000-0000-000000000001', NULL, 'tour', 'menu.tour.title', 'Tour', NULL, 'map', 25, true),
   ('30000000-0000-0000-0000-000000000001', NULL, 'apikeys', 'menu.apikeys.title', 'API Keys', NULL, 'key', 30, true)
 ON CONFLICT (id) DO UPDATE SET
     label_default = EXCLUDED.label_default,
@@ -345,19 +346,31 @@ ON CONFLICT (id) DO UPDATE SET
     sort_order = EXCLUDED.sort_order,
     parent_id = EXCLUDED.parent_id;
 
--- Permissions Admin children (RBAC)
+-- Permissions Admin children (RBAC) - sinnvoll sortiert
 INSERT INTO menu_items (id, parent_id, module_key, label_key, label_default, href, icon, sort_order, is_active) VALUES
   ('20000000-0000-0000-0000-000000000010', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.dashboard', 'Dashboard', '/admin/permissions/dashboard', 'layout-dashboard', 10, true),
-  ('20000000-0000-0000-0000-000000000011', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.roles', 'Rollen', '/admin/permissions/roles', 'user-cog', 15, true),
-  ('20000000-0000-0000-0000-000000000012', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.permissions', 'Berechtigungen', '/admin/permissions/permissions', 'shield-check', 20, true),
-  ('20000000-0000-0000-0000-000000000013', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.modules', 'Module', '/admin/permissions/modules', 'package', 30, true),
-  ('20000000-0000-0000-0000-000000000014', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.resources', 'Ressourcen', '/admin/permissions/resources', 'database', 35, true),
-  ('20000000-0000-0000-0000-000000000015', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.variants', 'Varianten', '/admin/permissions/variants', 'layers', 40, true),
-  ('20000000-0000-0000-0000-000000000016', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.groups', 'Gruppen', '/admin/permissions/groups', 'users-round', 50, true),
-  ('20000000-0000-0000-0000-000000000017', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.orgunits', 'Org. Einheiten', '/admin/permissions/org-units', 'building', 55, true),
-  ('20000000-0000-0000-0000-000000000018', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.matrix', 'Matrix', '/admin/permissions/matrix', 'grid-2x2', 60, true),
-  ('20000000-0000-0000-0000-000000000019', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.effective', 'Effektive Rechte', '/admin/permissions/effective-permissions', 'check-circle', 65, true),
-  ('20000000-0000-0000-0000-00000000001a', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.rbacguide', 'RBAC Guide', '/admin/permissions/rbac-guide', 'book-open', 70, true)
+  ('20000000-0000-0000-0000-000000000011', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.roles', 'Rollen', '/admin/permissions/roles', 'user-cog', 20, true),
+  ('20000000-0000-0000-0000-000000000016', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.groups', 'Gruppen', '/admin/permissions/groups', 'users-round', 30, true),
+  ('20000000-0000-0000-0000-000000000017', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.orgunits', 'Org. Einheiten', '/admin/permissions/org-units', 'building', 40, true),
+  ('20000000-0000-0000-0000-000000000012', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.permissions', 'Berechtigungen', '/admin/permissions/permissions', 'shield-check', 50, true),
+  ('20000000-0000-0000-0000-000000000013', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.modules', 'Module', '/admin/permissions/modules', 'package', 60, true),
+  ('20000000-0000-0000-0000-000000000014', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.resources', 'Ressourcen', '/admin/permissions/resources', 'database', 70, true),
+  ('20000000-0000-0000-0000-000000000015', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.variants', 'Varianten', '/admin/permissions/variants', 'layers', 80, true),
+  ('20000000-0000-0000-0000-000000000018', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.matrix', 'Matrix', '/admin/permissions/matrix', 'grid-2x2', 90, true),
+  ('20000000-0000-0000-0000-000000000019', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.effective', 'Effektive Rechte', '/admin/permissions/effective-permissions', 'check-circle', 100, true),
+  ('20000000-0000-0000-0000-00000000001a', '20000000-0000-0000-0000-000000000001', 'permissions', 'menu.permissions.rbacguide', 'RBAC Guide', '/admin/permissions/rbac-guide', 'book-open', 110, true)
+ON CONFLICT (id) DO UPDATE SET
+    label_default = EXCLUDED.label_default,
+    href = EXCLUDED.href,
+    icon = EXCLUDED.icon,
+    sort_order = EXCLUDED.sort_order,
+    parent_id = EXCLUDED.parent_id;
+
+-- Tour children
+INSERT INTO menu_items (id, parent_id, module_key, label_key, label_default, href, icon, sort_order, is_active) VALUES
+  ('40000000-0000-0000-0000-000000000010', '40000000-0000-0000-0000-000000000001', 'tour', 'menu.tour.dashboard', 'Dashboard', '/admin/tour/dashboard', 'layout-dashboard', 10, true),
+  ('40000000-0000-0000-0000-000000000011', '40000000-0000-0000-0000-000000000001', 'tour', 'menu.tour.tours', 'Touren', '/admin/tour/tours', 'route', 20, true),
+  ('40000000-0000-0000-0000-000000000012', '40000000-0000-0000-0000-000000000001', 'tour', 'menu.tour.steps', 'Schritte', '/admin/tour/steps', 'footprints', 30, true)
 ON CONFLICT (id) DO UPDATE SET
     label_default = EXCLUDED.label_default,
     href = EXCLUDED.href,
