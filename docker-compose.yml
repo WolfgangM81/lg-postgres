@@ -20,6 +20,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    labels:
+      homepage.group: "lg — Infra"
+      homepage.name: "lg Postgres"
+      homepage.icon: "postgres"
+      homepage.description: "PostgreSQL 16 — licenseguard DB (port 5642 side-by-side, 5432 default)"
 
 networks:
   lg-internal:
